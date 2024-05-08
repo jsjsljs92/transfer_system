@@ -12,6 +12,7 @@ type IAccountService interface {
 	ValidateCreateAccountReq(req CreateAccountRequest) error
 	CreateAccount(req CreateAccountRequest) error
 	GetAccountByID(id int) (*models.Account, error)
+	UpdateAccount(acc models.Account) error
 }
 
 type AccountService struct {
@@ -23,7 +24,8 @@ func NewAccountService(db *sql.DB) *AccountService {
 	accountRepository := NewAccountRepository(db)
 	return &AccountService{
 		DB:                db,
-		AccountRepository: accountRepository}
+		AccountRepository: accountRepository,
+	}
 }
 
 func (as *AccountService) ValidateCreateAccountReq(req CreateAccountRequest) error {
@@ -68,6 +70,14 @@ func (as *AccountService) GetAccountByID(id int) (*models.Account, error) {
 		return nil, err
 	}
 	return record, nil
+}
+
+func (as *AccountService) UpdateAccount(acc models.Account) error {
+	err := as.AccountRepository.UpdateAccount(acc)
+	if err != nil {
+		return err
+	}
+	return nil
 }
 
 func convertToFloat32(value string) (float32, error) {

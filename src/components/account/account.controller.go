@@ -28,7 +28,7 @@ func NewAccountController(db *sql.DB) *AccountController {
 // @success     201 {object} Nil
 // @failure		400 {object} errors.ErrorResponse "INVALID_SYS_PARAM"
 // @failure		500 {object} errors.ErrorResponse "SYS_INTERNAL_SERVER_ERROR"
-// @router      /account [post]
+// @router      /accounts [post]
 func (ac *AccountController) CreateAccount(c *gin.Context) {
 	var body CreateAccountRequest
 	err := c.ShouldBindJSON(&body)
@@ -64,7 +64,7 @@ func (ac *AccountController) CreateAccount(c *gin.Context) {
 // @success     200 {object} GetAccountResponse
 // @failure		400 {object} errors.ErrorResponse "INVALID_SYS_PARAM"
 // @failure		500 {object} errors.ErrorResponse "SYS_INTERNAL_SERVER_ERROR"
-// @router      /account/:id [get]
+// @router      /accounts/:id [get]
 func (ac *AccountController) GetAccountByID(c *gin.Context) {
 	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
