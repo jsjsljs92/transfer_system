@@ -113,7 +113,7 @@ func setupTables(db *sql.DB) {
 
 func CreateRoutes(route *gin.Engine, db *sql.DB) {
 	{
-		v1 := route.Group("")
+		v1 := route.Group("/v1")
 
 		// create account
 		{
