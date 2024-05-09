@@ -3,8 +3,8 @@ package account
 import (
 	"database/sql"
 	"errors"
-	"strconv"
 
+	"github.com/jsjsljs92/transferSystem/common"
 	"github.com/jsjsljs92/transferSystem/src/models"
 )
 
@@ -29,7 +29,7 @@ func NewAccountService(db *sql.DB) *AccountService {
 
 func (as *AccountService) ValidateCreateAccountReq(req CreateAccountRequest) error {
 
-	balance, err := convertToFloat32(req.Balance)
+	balance, err := common.ConvertToFloat32(req.Balance)
 	if err != nil {
 		return errors.New("balance must be make up of numbers")
 	}
@@ -69,16 +69,4 @@ func (as *AccountService) GetAccountByID(id int) (*models.Account, error) {
 		return nil, err
 	}
 	return record, nil
-}
-
-func convertToFloat32(value string) (float32, error) {
-	// Convert string to float64
-	floatVal, err := strconv.ParseFloat(value, 32)
-	if err != nil {
-		return 0, err
-	}
-
-	// Format float to have at most 5 decimal points
-	formattedVal := float32(floatVal)
-	return formattedVal, nil
 }

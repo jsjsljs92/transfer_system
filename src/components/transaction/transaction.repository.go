@@ -3,10 +3,10 @@ package transaction
 import (
 	"database/sql"
 	"fmt"
-	"log"
 	"strconv"
 
 	"github.com/jsjsljs92/transferSystem/src/models"
+	"github.com/sirupsen/logrus"
 )
 
 type ITransactionRepository interface {
@@ -51,7 +51,7 @@ func (tr *TransactionRepository) UpdateTransactionBalance(source, destination mo
 
 	tx, err := tr.DB.Begin()
 	if err != nil {
-		log.Fatal(err)
+		logrus.Fatal(err)
 	}
 
 	query := "UPDATE account SET balance = $1, version = $2, timestamp = $3 WHERE acc_id = $4 AND version = $5"
@@ -77,7 +77,7 @@ func (tr *TransactionRepository) UpdateTransactionBalance(source, destination mo
 
 	err = tx.Commit()
 	if err != nil {
-		log.Fatal(err)
+		logrus.Fatal(err)
 	}
 
 	return nil

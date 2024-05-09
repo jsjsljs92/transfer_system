@@ -3,9 +3,9 @@ package transaction
 import (
 	"database/sql"
 	"errors"
-	"strconv"
 	"time"
 
+	"github.com/jsjsljs92/transferSystem/common"
 	account "github.com/jsjsljs92/transferSystem/src/components/account"
 	"github.com/jsjsljs92/transferSystem/src/models"
 	"github.com/sirupsen/logrus"
@@ -40,7 +40,7 @@ func NewTransactionService(db *sql.DB) *TransactionService {
 }
 
 func (ts *TransactionService) ValidateTransaction(req TransactionRequest) ValidateObj {
-	amount, err := convertToFloat32(req.Amount)
+	amount, err := common.ConvertToFloat32(req.Amount)
 	if err != nil {
 		return ValidateObj{
 			Err: errors.New("amount must be make up of numbers"),
@@ -83,7 +83,7 @@ func (ts *TransactionService) ValidateTransaction(req TransactionRequest) Valida
 }
 
 func (ts *TransactionService) CreateTransactionRecord(req TransactionRequest) {
-	amount, _ := convertToFloat32(req.Amount)
+	amount, _ := common.ConvertToFloat32(req.Amount)
 	now := time.Now()
 
 	go func(payin models.Payin) {
@@ -116,16 +116,4 @@ func (ts *TransactionService) UpdateAccountBalance(accounts ValidateObj) error {
 		return err
 	}
 	return nil
-}
-
-func convertToFloat32(value string) (float32, error) {
-	// Convert string to float64
-	floatVal, err := strconv.ParseFloat(value, 32)
-	if err != nil {
-		return 0, err
-	}
-
-	// Format float to have at most 5 decimal points
-	formattedVal := float32(floatVal)
-	return formattedVal, nil
 }
