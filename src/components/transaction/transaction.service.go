@@ -111,12 +111,7 @@ func (ts *TransactionService) CreateTransactionRecord(req TransactionRequest) {
 
 func (ts *TransactionService) UpdateAccountBalance(accounts ValidateObj) error {
 
-	err := ts.AccountService.UpdateAccount(*accounts.SourceAcc)
-	if err != nil {
-		return err
-	}
-
-	err = ts.AccountService.UpdateAccount(*accounts.DestinationAcc)
+	err := ts.TransactionRepository.UpdateTransactionBalance(*accounts.SourceAcc, *accounts.DestinationAcc)
 	if err != nil {
 		return err
 	}

@@ -1,24 +1,32 @@
 package server
 
-// type Server struct {
-// 	server *gin.Engine
-// }
+import (
+	"database/sql"
+	"fmt"
+	"log"
 
-// func CreateServer() *Server {
-// 	engine := gin.New()
-// 	engine.Use(gin.Recovery())
-// 	server := &Server{engine}
-// 	return server
-// }
+	"github.com/gin-gonic/gin"
+)
 
-// func (s *Server) AddRoutes(db *sql.DB) {
-// 	CreateRoutes(s.server, db)
-// }
+type Server struct {
+	server *gin.Engine
+}
 
-// func (s *Server) Run() {
-// 	err := s.server.Run(fmt.Sprintf(`:%v`, 8080))
+func CreateServer() *Server {
+	engine := gin.New()
+	engine.Use(gin.Recovery())
+	server := &Server{engine}
+	return server
+}
 
-// 	if err != nil {
-// 		log.Printf(`Failed to start server with error: %v`, err)
-// 	}
-// }
+func (s *Server) AddRoutes(db *sql.DB) {
+	CreateRoutes(s.server, db)
+}
+
+func (s *Server) Run() {
+	err := s.server.Run(fmt.Sprintf(`:%v`, 8080))
+
+	if err != nil {
+		log.Printf(`Failed to start server with error: %v`, err)
+	}
+}

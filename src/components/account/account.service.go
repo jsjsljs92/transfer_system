@@ -12,7 +12,6 @@ type IAccountService interface {
 	ValidateCreateAccountReq(req CreateAccountRequest) error
 	CreateAccount(req CreateAccountRequest) error
 	GetAccountByID(id int) (*models.Account, error)
-	UpdateAccount(acc models.Account) error
 }
 
 type AccountService struct {
@@ -70,14 +69,6 @@ func (as *AccountService) GetAccountByID(id int) (*models.Account, error) {
 		return nil, err
 	}
 	return record, nil
-}
-
-func (as *AccountService) UpdateAccount(acc models.Account) error {
-	err := as.AccountRepository.UpdateAccount(acc)
-	if err != nil {
-		return err
-	}
-	return nil
 }
 
 func convertToFloat32(value string) (float32, error) {

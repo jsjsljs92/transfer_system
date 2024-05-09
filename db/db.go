@@ -1,72 +1,66 @@
 package db
 
-// func setupDB() *sql.DB {
-// 	// Connection parameters
-// 	connStr := "user=postgres password=password dbname=postgres sslmode=disable"
+import (
+	"database/sql"
+	"fmt"
+	"log"
+)
 
-// 	log.Println("Test connection")
+func SetupDB() *sql.DB {
+	// Connection parameters
+	connStr := "user=postgres password=password dbname=postgres sslmode=disable"
 
-// 	// Connect to the database
-// 	db, err := sql.Open("postgres", connStr)
-// 	if err != nil {
-// 		log.Fatalf("Failed to connect to the database: %v", err)
-// 	}
-// 	// defer db.Close()
+	log.Println("Test connection")
 
-// 	rows, err := db.Query("CREATE TABLE Persons (id int);")
+	// Connect to the database
+	db, err := sql.Open("postgres", connStr)
+	if err != nil {
+		log.Fatalf("Failed to connect to the database: %v", err)
+	}
 
-// 	log.Println(rows)
-// 	log.Println(err)
+	// Ping the database to verify the connection
+	err = db.Ping()
+	if err != nil {
+		log.Fatalf("Failed to ping the database: %v", err)
+	}
+	return db
+}
 
-// 	// Ping the database to verify the connection
-// 	err = db.Ping()
-// 	if err != nil {
-// 		log.Fatalf("Failed to ping the database: %v", err)
-// 	}
-// 	return db
-// }
+func SetupTables(db *sql.DB) {
 
-// func setupTables(db *sql.DB) {
-// 	// Open database connection
-// 	// db, err := sql.Open("sqlite3", "test.db")
-// 	// if err != nil {
-// 	// 	log.Fatal(err)
-// 	// }
-// 	defer db.Close()
+	// Create account table
+	_, err := db.Exec(`CREATE TABLE IF NOT EXISTS account (
+		id SERIAL PRIMARY KEY,
+		acc_id INT NOT NULL UNIQUE,
+		balance FLOAT NOT NULL,
+		version INT NOT NULL,
+		timestamp TIMESTAMP NOT NULL
+	)`)
+	if err != nil {
+		log.Fatal(err)
+	}
 
-// 	// Create account table
-// 	_, err := db.Exec(`CREATE TABLE IF NOT EXISTS account (
-// 		id INTEGER PRIMARY KEY,
-// 		acc_id INTEGER UNIQUE,
-// 		balance FLOAT,
-// 		version INTEGER,
-// 		timestamp TIMESTAMP
-// 	)`)
-// 	if err != nil {
-// 		log.Fatal(err)
-// 	}
+	// Create payin table
+	_, err = db.Exec(`CREATE TABLE IF NOT EXISTS payin (
+		id SERIAL PRIMARY KEY,
+		to_acc_id INT NOT NULL,
+		amount FLOAT NOT NULL,
+		timestamp TIMESTAMP NOT NULL
+	)`)
+	if err != nil {
+		log.Fatal(err)
+	}
 
-// 	// Create payin table
-// 	_, err = db.Exec(`CREATE TABLE IF NOT EXISTS payin (
-// 		id INTEGER PRIMARY KEY,
-// 		to_acc_id INTEGER,
-// 		amount FLOAT,
-// 		timestamp TIMESTAMP
-// 	)`)
-// 	if err != nil {
-// 		log.Fatal(err)
-// 	}
+	// Create payout table
+	_, err = db.Exec(`CREATE TABLE IF NOT EXISTS payout (
+		id SERIAL PRIMARY KEY NOT NULL,
+		from_acc_id INT NOT NULL,
+		amount FLOAT NOT NULL,
+		timestamp TIMESTAMP NOT NULL
+	)`)
+	if err != nil {
+		log.Fatal(err)
+	}
 
-// 	// Create payout table
-// 	_, err = db.Exec(`CREATE TABLE IF NOT EXISTS payout (
-// 		id INTEGER PRIMARY KEY,
-// 		from_acc_id INTEGER,
-// 		amount FLOAT,
-// 		timestamp TIMESTAMP
-// 	)`)
-// 	if err != nil {
-// 		log.Fatal(err)
-// 	}
-
-// 	fmt.Println("All tables created successfully")
-// }
+	fmt.Println("All tables created successfully")
+}
